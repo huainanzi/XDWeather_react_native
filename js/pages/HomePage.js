@@ -8,16 +8,19 @@ import {View,
         Image,
         Button
 } from 'react-native';
-import HTTPUtils from './../HTTPUtils/HTTPUtils'
+import HTTPSeriver from './../Serivers/HTTPSeriver';
+import WeatherDesComponent from './../Component/WeatherDesComponent';
 import {createStackNavigator,createAppContainer} from 'react-navigation';
+import TempUtils from './../Utils/TempUtils'
 
 const WINDOW_WITH = Dimensions.get('screen').width;
+const WINDOW_HEIGHT = Dimensions.get('screen').height;
 const ICON_WH = WINDOW_WITH *0.6;
 
 class Homepage extends React.Component{
     static navigationOptions = ({navigation}) => {
         return{
-            title:navigation.getParam('otherParam','sssssss'),
+            title:navigation.getParam('otherParam',''),
             headerTransparent:'true',
             headerRight:(
                 <Button title='温度'></Button>
@@ -31,26 +34,35 @@ class Homepage extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            weatherData:''
+            weatherData:'',
+            cityName:''
         };
     }
     componentDidMount(){
-        this.props.navigation.setParams({otherParam:'New York'});
-        this.setState({
-            weatherData:'阿键盘手机单批发价按时发票上飞机阿萨德法师打发斯蒂芬阿萨德法师打发斯蒂芬'
-        });
-        let json = HTTPUtils.getWeather('NanJing');
-        console.log(json);
+        HTTPSeriver.getWeather('NanJing')
+                    .then((data) => {
+                        //weatherData
+                        let weatherData = 'it is' + ' ' + data.weather[0].description + ' ' + 'and' + ' ' + data.weather[1].description;
+                        let weatherTemp = TempUtils.tranferTemp(data.main.temp);
+                        this.setState({
+                            weatherData:weatherData,
+                            cityName:data.name,
+                            weatherTemp:weatherTemp,
+                        });
+                        this.props.navigation.setParams({otherParam:this.state.cityName});
+                    })
+                    .catch((error) => {
+
+                    });
     }
     render(){
-        let dataArr = [{name:'dong',age:'27'},{name:'hui',age:'25'}]
         return(
             <View style = {styles.container}>
                 <View style = {styles.weatherBgContainer}>
                     <Image style = {styles.weathreIcon}></Image>
                 </View>
                 <SafeAreaView style = {styles.weatherDescription}>
-                    <Text style = {styles.weatherContent}>{this.state.weatherData}</Text>
+                     <WeatherDesComponent weather= {this.state.weatherData} temp= {this.state.weatherTemp} style = {styles.weatherContent}/>
                 </SafeAreaView>
             </View>
         );
@@ -73,7 +85,9 @@ const styles = StyleSheet.create({
         justifyContent:'center'
     },
     weatherDescription:{
-        flex:1
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center',
     },
     weathreIcon:{
         width:ICON_WH,
@@ -82,7 +96,7 @@ const styles = StyleSheet.create({
         borderRadius:ICON_WH/2.0
     },
     weatherContent:{
-        marginTop:44
+        
     }
 });
 
