@@ -24,11 +24,12 @@ class Homepage extends React.Component{
             title:navigation.getParam('otherParam',''),
             headerTransparent:'true',
             headerRight:(
-                <Button title='温度'></Button>
+                // <Button title='温度'></Button>
+                <Text style = {{marginRight:10}}>℃</Text>
             ),
-            headerLeft:(
-                <Button title='地图'></Button>
-            ),
+            // headerLeft:(
+            //     <Button title='地图'></Button>
+            // ),
             
         };
     };
@@ -37,7 +38,9 @@ class Homepage extends React.Component{
         this.state = {
             weatherData:'',
             cityName:'',
-            forecastArr:[],
+            hourforecastArr:[],
+            dayforecastArr:[],
+
         };
     }
     componentDidMount(){
@@ -62,13 +65,17 @@ class Homepage extends React.Component{
                     });
         HTTPSeriver.getForecastWeather('NanJing')
                     .then((data) => {
-                        console.log(data.message);
                         this.setState({
-                            forecastArr:data.list.slice(0,8),
+                            hourforecastArr:data.list.slice(0,8),
+                            dayforecastArr:data.list.filter((item) => {
+                                let value = new Date(parseInt(item.dt) * 1000);
+                                console.log(value.getHours());
+                                return value.getHours() == 11;
+                            }),
                         });
                     })
                     .catch((error) => {
-
+                        console.log(error);    
                     });            
     }
     render(){
@@ -82,7 +89,7 @@ class Homepage extends React.Component{
                         <View style = {styles.weatherHourList}>
                             <FlatList  
                                 horizontal = {true} 
-                                data = {this.state.forecastArr} 
+                                data = {this.state.hourforecastArr} 
                                 ItemSeparatorComponent = {this._renderSeparator}
                                 showsHorizontalScrollIndicator = {false}
                                 showsVerticalScrollIndicator = {false}
@@ -104,11 +111,12 @@ class Homepage extends React.Component{
                     </View>
                     <View style = {styles.weatherDayForest}>
                         <FlatList
-                            data = {['dass','ddddfd','ddddddsadfeead']}
+                            data = {this.state.dayforecastArr}
+                            keyExtractor = {(item,index) =>{item.dt}}
                             renderItem = {({item}) => (
                                 <View style = {{flexDirection:'row'}}>
                                     <View style = {{flex:1,justifyContent:'center'}}>
-                                        <Text style = {{fontSize:15,color:'#3c3a3a',marginLeft:10}}>02.16</Text>
+                                        <Text style = {{fontSize:15,color:'#3c3a3a',marginLeft:10}}>{DateUtils.getDate(item.dt).month.toString()+ '.' +DateUtils.getDate(item.dt).day.toString()}</Text>
                                     </View>
                                     <View style = {{flex:1,alignItems:'center'}}>
                                         <Image style = {{height:50,width:50}} source = {{uri:'http://openweathermap.org/img/w/10d.png'}}></Image>
