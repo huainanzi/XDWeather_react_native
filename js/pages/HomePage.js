@@ -69,7 +69,7 @@ class Homepage extends React.Component{
                             hourforecastArr:data.list.slice(0,8),
                             dayforecastArr:data.list.filter((item) => {
                                 let value = new Date(parseInt(item.dt) * 1000);
-                                console.log(value.getHours());
+                                console.log(value.getDate());
                                 return value.getHours() == 11;
                             }),
                         });
@@ -119,14 +119,14 @@ class Homepage extends React.Component{
                                         <Text style = {{fontSize:15,color:'#3c3a3a',marginLeft:10}}>{DateUtils.getDate(item.dt).month.toString()+ '.' +DateUtils.getDate(item.dt).day.toString()}</Text>
                                     </View>
                                     <View style = {{flex:1,alignItems:'center'}}>
-                                        <Image style = {{height:50,width:50}} source = {{uri:'http://openweathermap.org/img/w/10d.png'}}></Image>
+                                        <Image style = {{height:50,width:50}} source = {{uri:this._weatherIconURL(item.weather[0].icon)}}></Image>
                                     </View>
                                     <View style = {{flex:1,
                                                     alignItems:'center',
                                                     flexDirection:'row',
                                                     justifyContent:'flex-end'}}>
-                                        <Text style = {{marginRight:20,fontSize:15,color:'#3c3a3a'}}>20</Text>
-                                        <Text style = {{marginRight:10,fontSize:15,color:'#3c3a3a'}}>10</Text>
+                                        <Text style = {{marginRight:20,fontSize:15,color:'#3c3a3a'}}>{TempUtils.tranferTemp(item.main.temp_max)}</Text>
+                                        <Text style = {{marginRight:10,fontSize:15,color:'#3c3a3a'}}>{TempUtils.tranferTemp(item.main.temp_min)}</Text>
                                     </View>
                                 </View> 
                             )}

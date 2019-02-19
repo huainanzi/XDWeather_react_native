@@ -7,8 +7,8 @@ class DateUtils{
         let value = new Date(parseInt(date) * 1000);
         return {
             year:value.getFullYear(),
-            month:value.getMonth(),
-            day:value.getDay(),
+            month:value.getMonth()+1,
+            day:value.getDate(),
             hour:value.getHours(),
             minite:value.getMinutes,
         };
