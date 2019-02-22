@@ -13,6 +13,12 @@ class DateUtils{
             minite:value.getMinutes,
         };
     }
+    static getWeek(date){
+        const weeks = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        let value = new Date(parseInt(date) * 1000);
+        let weekNumber = value.getDay();
+        return weeks[weekNumber];
+    }
 }
 
 export default DateUtils;

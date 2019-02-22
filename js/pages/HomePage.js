@@ -13,6 +13,7 @@ import WeatherDesComponent from './../Component/WeatherDesComponent';
 import {createStackNavigator,createAppContainer} from 'react-navigation';
 import TempUtils from './../Utils/TempUtils'
 import DateUtils from './../Utils/DateUtils'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const WINDOW_WITH = Dimensions.get('screen').width;
 const WINDOW_HEIGHT = Dimensions.get('screen').height;
@@ -24,12 +25,14 @@ class Homepage extends React.Component{
             title:navigation.getParam('otherParam',''),
             headerTransparent:'true',
             headerRight:(
-                // <Button title='温度'></Button>
                 <Text style = {{marginRight:10}}>℃</Text>
             ),
-            // headerLeft:(
-            //     <Button title='地图'></Button>
-            // ),
+            headerLeft:(
+                <Icon.Button    name = 'map-marker' 
+                                backgroundColor = 'transparent' 
+                                color = "#333333" 
+                                size = {25}></Icon.Button>
+            ),
             
         };
     };
@@ -116,7 +119,7 @@ class Homepage extends React.Component{
                             renderItem = {({item}) => (
                                 <View style = {{flexDirection:'row'}}>
                                     <View style = {{flex:1,justifyContent:'center'}}>
-                                        <Text style = {{fontSize:15,color:'#3c3a3a',marginLeft:10}}>{DateUtils.getDate(item.dt).month.toString()+ '.' +DateUtils.getDate(item.dt).day.toString()}</Text>
+                                        <Text style = {{fontSize:15,color:'#3c3a3a',marginLeft:10}}>{DateUtils.getWeek(item.dt)}</Text>
                                     </View>
                                     <View style = {{flex:1,alignItems:'center'}}>
                                         <Image style = {{height:50,width:50}} source = {{uri:this._weatherIconURL(item.weather[0].icon)}}></Image>
