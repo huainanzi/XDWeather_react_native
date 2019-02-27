@@ -5,8 +5,9 @@ import {View,
         FlatList,
         SafeAreaView,
         Dimensions,
+        Alert,
         Image,
-        Button
+        Button,
 } from 'react-native';
 import HTTPSeriver from './../Serivers/HTTPSeriver';
 import WeatherDesComponent from './../Component/WeatherDesComponent';
@@ -14,6 +15,8 @@ import {createStackNavigator,createAppContainer} from 'react-navigation';
 import TempUtils from './../Utils/TempUtils'
 import DateUtils from './../Utils/DateUtils'
 import Icon from 'react-native-vector-icons/FontAwesome'
+
+const Geolocation = require('Geolocation');
 
 const WINDOW_WITH = Dimensions.get('screen').width;
 const WINDOW_HEIGHT = Dimensions.get('screen').height;
@@ -30,6 +33,7 @@ class Homepage extends React.Component{
             headerLeft:(
                 <Icon.Button    name = 'map-marker' 
                                 backgroundColor = 'transparent' 
+                                onPress = {navigation.getParam('locationCallback')}
                                 color = "#333333" 
                                 size = {25}></Icon.Button>
             ),
@@ -38,6 +42,7 @@ class Homepage extends React.Component{
     };
     constructor(props){
         super(props);
+        this._locationClick = this._locationClick.bind(this);
         this.state = {
             weatherData:'',
             cityName:'',
@@ -47,7 +52,14 @@ class Homepage extends React.Component{
         };
     }
     componentDidMount(){
-        console.log('ffffff');
+        this.props.navigation.setParams({locationCallback:this._locationClick});
+        //location
+        Geolocation.getCurrentPosition((type) =>{
+            console.log('success');
+        },
+        (error) =>{
+            console.log('errrrrrrrrrr');
+        });
         HTTPSeriver.getWeather('NanJing')
                     .then((data) => {
                         //weatherData
@@ -148,6 +160,9 @@ class Homepage extends React.Component{
         let url = 'http://openweathermap.org/img/w/'+icon+'.png'
         console.log(url);
         return url ;
+    }
+    _locationClick(){
+        this.props.navigation.navigate('locationPage');
     }
 }
 

@@ -11,11 +11,15 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import {createAppContainer,createStackNavigator} from 'react-navigation'
 import HomePage from './js/pages/HomePage'
+import LocationPage from './js/pages/LocationPage';
 
 const appNavigator = createStackNavigator({
   homePage:{
-    screen:HomePage
-  }
+    screen:HomePage,
+  },
+  locationPage:{
+    screen:LocationPage,
+  },
 },{
   initialRouteName:'homePage'
 });
