@@ -3,8 +3,8 @@ const BASEURL = 'http://api.openweathermap.org/data/2.5/';
 const APPID = 'cc631a3ea4cb0e5b20773efc2b508e1b';
 
 class HTTPSeriver{
-    static getWeather(cityName){
-        let url = BASEURL +'weather' + '?' +'q='+cityName + '&' + 'appid=' + APPID; 
+    static getWeather(lat,lon){
+        let url = BASEURL +'weather' + '?' +'lat='+lat + '&' + 'lon=' + lon + '&' + 'appid=' + APPID; 
         console.log(url);
         return fetch(url)
                     .then((response) => response.json())
@@ -15,8 +15,8 @@ class HTTPSeriver{
                         return error;
                     });
     }
-    static getForecastWeather(cityName){
-        let url = BASEURL +'forecast' + '?' +'q='+cityName + '&' + 'appid=' + APPID; 
+    static getForecastWeather(lat,lon){
+        let url = BASEURL +'forecast' + '?' +'lat='+lat + '&' + 'lon=' + lon + '&' + 'appid=' + APPID; 
         console.log(url);
         return fetch(url)
                     .then((response) => response.json())

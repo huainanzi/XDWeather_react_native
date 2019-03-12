@@ -48,50 +48,23 @@ class Homepage extends React.Component{
             cityName:'',
             hourforecastArr:[],
             dayforecastArr:[],
+            currentLocation:{},
 
         };
     }
     componentDidMount(){
         this.props.navigation.setParams({locationCallback:this._locationClick});
         //location
-        Geolocation.getCurrentPosition((type) =>{
-            console.log('success');
+        Geolocation.getCurrentPosition((location) =>{
+            this._fetchData(location.coords);
+            this.setState({
+                currentLocation:location.coords
+            });
         },
         (error) =>{
-            console.log('errrrrrrrrrr');
+            console.log('get location fail');
         });
-        HTTPSeriver.getWeather('NanJing')
-                    .then((data) => {
-                        //weatherData
-                        let arr = data.weather.map((item) => {
-                            return item.description;
-                        });
-                        let weatherData = 'its ' + arr.join(' ');
-                        let weatherTemp = TempUtils.tranferTemp(data.main.temp);
-                        this.setState({
-                            weatherData:weatherData,
-                            cityName:data.name,
-                            weatherTemp:weatherTemp,
-                        });
-                        this.props.navigation.setParams({otherParam:this.state.cityName});
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-        HTTPSeriver.getForecastWeather('NanJing')
-                    .then((data) => {
-                        this.setState({
-                            hourforecastArr:data.list.slice(0,8),
-                            dayforecastArr:data.list.filter((item) => {
-                                let value = new Date(parseInt(item.dt) * 1000);
-                                console.log(value.getDate());
-                                return value.getHours() == 11;
-                            }),
-                        });
-                    })
-                    .catch((error) => {
-                        console.log(error);    
-                    });            
+       
     }
     render(){
         return(
@@ -162,8 +135,52 @@ class Homepage extends React.Component{
         return url ;
     }
     _locationClick(){
-        this.props.navigation.navigate('locationPage');
+        this.props.navigation.navigate('locationPage',{ latitude:this.state.currentLocation.latitude,
+                                                        longitude:this.state.currentLocation.longitude,
+                                                        callback: (coords) =>{
+                                                            this.setState({
+                                                                currentLocation:coords
+                                                            });
+                                                            this._fetchData(coords);
+                                                        }
+                                                    }
+                                        );
     }
+    _fetchData(coords){
+        HTTPSeriver.getWeather(coords.latitude,coords.longitude)
+        .then((data) => {
+            console.log(data);
+            //weatherData
+            let arr = data.weather.map((item) => {
+                return item.description;
+            });
+            let weatherData = 'its ' + arr.join(' ');
+            let weatherTemp = TempUtils.tranferTemp(data.main.temp);
+            this.setState({
+                weatherData:weatherData,
+                cityName:data.name,
+                weatherTemp:weatherTemp,
+            });
+            this.props.navigation.setParams({otherParam:this.state.cityName});
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+        HTTPSeriver.getForecastWeather(coords.latitude,coords.longitude)
+                .then((data) => {
+                    this.setState({
+                        hourforecastArr:data.list.slice(0,8),
+                        dayforecastArr:data.list.filter((item) => {
+                            let value = new Date(parseInt(item.dt) * 1000);
+                            console.log(value.getDate());
+                            return value.getHours() == 11;
+                        }),
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);    
+                });            
+            }
 }
 
 const styles = StyleSheet.create({
