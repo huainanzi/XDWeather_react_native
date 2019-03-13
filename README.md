@@ -7,7 +7,7 @@ create weather app by react native
 ## Installation
 ```sh
 # clone the project and cd into it
-git clone git@github.com:Flaque/quirk.git; cd ./XDWeather_react_native
+git clone https://github.com/huainanzi/XDWeather_react_native.git
 
 # install dependencies
 npm install
@@ -15,3 +15,6 @@ npm install
 # start development environment
 react-native run-ios
 ```
+
+## Thanks
+- ### API 
