@@ -19,3 +19,6 @@ react-native run-ios
 
 ## Thanks
 - ### API 
+[openweathermap](https://openweathermap.org/api)
+- ### Design
+[Weather-App](https://dribbble.com/shots/3735400-Weather-App)
