@@ -10,6 +10,7 @@ create weather app by react native
 git clone https://github.com/huainanzi/XDWeather_react_native.git
 
 # install dependencies
+cd ./XDWeather_react_native
 npm install
 
 # start development environment
